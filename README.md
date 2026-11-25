@@ -112,3 +112,14 @@ cargo test --workspace
 `scripts/check.sh` is the gate: rustfmt, clippy with `-D warnings` for the workspace and the
 driver, a check that the driver's lint policy matches the workspace's, and ast-grep rule tests
 and scan.
+
+## CI and releases
+
+Pull requests and pushes to main run formatting, Clippy with warnings denied, ast-grep
+rule tests and scans, and both Rust workspaces' tests. Run `scripts/check.sh` for the
+lint gates and `scripts/self-check.sh` to build the CLI and driver from source and check
+both workspaces against the two repository models.
+
+Pushing a `v*` tag runs the same checks and publishes a GitHub Release with the Linux
+x86-64 CLI and its SHA-256 checksum. Install the driver from the tagged source using
+the instructions above. Its runtime depends on the pinned rustc toolchain.
