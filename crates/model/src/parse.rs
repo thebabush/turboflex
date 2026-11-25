@@ -596,7 +596,7 @@ impl Parser<'_, '_> {
         let mut targets = None;
         let (mut test_edges_at, mut edges_at, mut provenance_at, mut targets_at) =
             (None, None, None, None);
-        for child in node.children().map(KdlDocument::nodes).unwrap_or_default() {
+        for child in node.children().into_iter().flat_map(KdlDocument::nodes) {
             match child.name().value() {
                 "test-edges" => {
                     let args = self.parse_list(child, "test-edges");
@@ -736,8 +736,7 @@ impl Parser<'_, '_> {
         let mut policy = self
             .policy
             .take()
-            .map(|(_, policy)| policy)
-            .unwrap_or_default();
+            .map_or_else(Policy::default, |(_, policy)| policy);
         policy.targets = self.resolve_targets();
         let mut rules = Vec::new();
         let mut seen_rules: HashMap<(ComponentId, ComponentId), Location> = HashMap::new();
