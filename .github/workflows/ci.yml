@@ -44,4 +44,15 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           TAG: ${{ github.ref_name }}
-        run: gh release create "$TAG" --verify-tag --generate-notes turboflex-linux-x86_64.tar.gz SHA256SUMS
+        run: |
+          if ! gh release view "$TAG" >/dev/null 2>&1; then
+            gh release create "$TAG" --draft --verify-tag --generate-notes
+          fi
+          if [[ "$(gh release view "$TAG" --json isDraft --jq .isDraft)" == true ]]; then
+            gh release upload "$TAG" --clobber turboflex-linux-x86_64.tar.gz SHA256SUMS
+            gh release edit "$TAG" --draft=false
+          fi
+          gh release view "$TAG" --json assets,isDraft |
+            jq -e '(.isDraft == false) and
+              (["SHA256SUMS","turboflex-linux-x86_64.tar.gz"] -
+              [.assets[] | select(.state == "uploaded" and .size > 0) | .name] == [])'
