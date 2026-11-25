@@ -28,6 +28,20 @@ snapshots:
       style: secondary
       start: 12
       end: 16
+  fn job_status() -> Option<String> { None }:
+    labels:
+    - source: fn job_status() -> Option<String> { None }
+      style: primary
+      start: 0
+      end: 42
+    - source: job_status
+      style: secondary
+      start: 3
+      end: 13
+    - source: Option<String>
+      style: secondary
+      start: 19
+      end: 33
   'struct S { kind: String }':
     labels:
     - source: 'kind: String'

@@ -26,3 +26,7 @@ rule:
         - kind: parameter
         - has: { field: pattern, matches: enum-ish-name }
         - has: { field: type, matches: string-type }
+    - all:
+        - kind: function_item
+        - has: { field: name, matches: enum-ish-name }
+        - has: { field: return_type, matches: string-type }
