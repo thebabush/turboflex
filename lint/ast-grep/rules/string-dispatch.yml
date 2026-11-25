@@ -1,0 +1,33 @@
+id: string-dispatch
+language: rust
+ignores:
+  - "**/tests.rs"
+  - "**/tests/**"
+  - "**/benches/**"
+severity: error
+message: Matching on string literals; parse into an enum at the boundary and match on the enum.
+note: |
+  rrr: prefer strong typing with enums over primitive types.
+  Allowed inside the parsing boundary itself: FromStr/TryFrom impls and from_str/parse*/try_from fns.
+rule:
+  kind: match_expression
+  has:
+    kind: match_block
+    has:
+      kind: match_arm
+      has:
+        field: pattern
+        has: { kind: string_literal, stopBy: end }
+  not:
+    inside:
+      stopBy: end
+      any:
+        - all:
+            - kind: mod_item
+            - has: { field: name, regex: '^tests$' }
+        - all:
+            - kind: impl_item
+            - has: { field: trait, regex: '(^|::)(FromStr|TryFrom<.*>)$' }
+        - all:
+            - kind: function_item
+            - has: { field: name, regex: '^(from_str|try_from|parse\w*)$' }

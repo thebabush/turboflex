@@ -1,0 +1,24 @@
+id: prefer-assert-eq
+language: rust
+severity: error
+message: Use assert_eq! so a failing test prints both sides.
+note: Only bare `a == b` asserts; ones with a message or with `&&`/`||`/`!=` at top level are left alone.
+rule:
+  kind: macro_invocation
+  all:
+    - has: { field: macro, regex: '^assert$' }
+    - has:
+        kind: token_tree
+        pattern: $ARGS
+        all:
+          - has: { regex: '^==$' }
+          - not: { has: { regex: '^(,|&&|\|\||!=)$' } }
+          # a nested `==` would make the textual split below ambiguous; flag without that risk
+          - not: { has: { kind: token_tree, stopBy: end, has: { regex: '^==$', stopBy: end } } }
+transform:
+  SPLIT:
+    replace:
+      source: $ARGS
+      replace: '^\((?s)(.*?)\s*==\s*(.*)\)$'
+      by: '$1, $2'
+fix: assert_eq!($SPLIT)

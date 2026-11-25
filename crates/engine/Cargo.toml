@@ -1,0 +1,15 @@
+[package]
+license.workspace = true
+name = "turboflex-engine"
+description = "Reflexion engine: compares the dependencies extracted from code with an architecture model."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+thiserror = "2"
+turboflex-graph = { path = "../graph" }
+turboflex-model = { path = "../model" }
+
+[lints]
+workspace = true

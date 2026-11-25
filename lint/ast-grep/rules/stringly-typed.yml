@@ -1,0 +1,28 @@
+id: stringly-typed
+language: rust
+ignores:
+  - "**/tests.rs"
+  - "**/tests/**"
+  - "**/benches/**"
+severity: error
+message: This name implies a fixed set of values; use an enum (or a newtype) instead of a string.
+note: |
+  rrr: prefer strong typing with enums and newtypes over primitive types.
+  If the value really is free-form text, suppress with `// ast-grep-ignore: stringly-typed`.
+utils:
+  enum-ish-name:
+    regex: '^(r#type|type_|kind|status|state|mode|level|role|category|phase|variant|severity|\w+_(kind|status|state|mode|type|level|role|category|phase|severity))$'
+  string-type:
+    regex: "^(String|&('\\w+ )?str|Option<String>|Option<&('\\w+ )?str>|Cow<('\\w+, )?str>)$"
+rule:
+  not:
+    inside: { kind: mod_item, has: { field: name, regex: '^tests$' }, stopBy: end }
+  any:
+    - all:
+        - kind: field_declaration
+        - has: { field: name, matches: enum-ish-name }
+        - has: { field: type, matches: string-type }
+    - all:
+        - kind: parameter
+        - has: { field: pattern, matches: enum-ish-name }
+        - has: { field: type, matches: string-type }

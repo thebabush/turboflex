@@ -1,0 +1,7 @@
+target/
+# extraction run outputs and generated indexes
+/runs/
+/fixtures/tricky/out/
+/fixtures/tricky/index.scip
+# local tool state
+/.claude/scheduled_tasks.lock

@@ -1,0 +1,15 @@
+[package]
+license.workspace = true
+name = "turboflex-graph"
+description = "Fact schema shared by extractors and the analysis core: entities, edges, kinds, provenance."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+
+[lints]
+workspace = true

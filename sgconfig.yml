@@ -1,0 +1,5 @@
+# ast-grep: syntactic rules that clippy can't express. Run via scripts/check.sh.
+ruleDirs:
+  - lint/ast-grep/rules
+testConfigs:
+  - testDir: lint/ast-grep/tests

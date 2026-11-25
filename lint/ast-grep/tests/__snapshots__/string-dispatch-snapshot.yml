@@ -1,0 +1,46 @@
+id: string-dispatch
+snapshots:
+  'fn f(s: &str) -> u8 { match s { "a" => 1, _ => 0 } }':
+    labels:
+    - source: match s { "a" => 1, _ => 0 }
+      style: primary
+      start: 22
+      end: 50
+    - source: '"a"'
+      style: secondary
+      start: 32
+      end: 35
+    - source: '"a"'
+      style: secondary
+      start: 32
+      end: 35
+    - source: '"a" => 1,'
+      style: secondary
+      start: 32
+      end: 41
+    - source: '{ "a" => 1, _ => 0 }'
+      style: secondary
+      start: 30
+      end: 50
+  'fn f(s: Option<&str>) -> u8 { match s { Some("a") => 1, _ => 0 } }':
+    labels:
+    - source: match s { Some("a") => 1, _ => 0 }
+      style: primary
+      start: 30
+      end: 64
+    - source: '"a"'
+      style: secondary
+      start: 45
+      end: 48
+    - source: '"a"'
+      style: secondary
+      start: 45
+      end: 48
+    - source: Some("a") => 1,
+      style: secondary
+      start: 40
+      end: 55
+    - source: '{ Some("a") => 1, _ => 0 }'
+      style: secondary
+      start: 38
+      end: 64

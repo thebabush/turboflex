@@ -1,0 +1,9 @@
+[package]
+name = "app"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+# Only for `#[derive(serde::Deserialize)]` on the sanitized type (a bypass case).
+serde = { version = "1.0.228", features = ["derive"] }

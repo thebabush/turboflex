@@ -1,0 +1,13 @@
+id: string-dispatch
+valid:
+  - "fn f(k: Kind) { match k { Kind::A => 1, Kind::B => 2 }; }"
+  - |
+    impl FromStr for Kind {
+        type Err = E;
+        fn from_str(s: &str) -> Result<Self, E> { match s { "a" => Ok(Kind::A), _ => Err(E) } }
+    }
+  - "fn parse_kind(s: &str) -> Kind { match s { \"a\" => Kind::A, _ => Kind::B } }"
+  - "mod tests { fn f(s: &str) -> u8 { match s { \"a\" => 1, _ => 0 } } }"
+invalid:
+  - "fn f(s: &str) -> u8 { match s { \"a\" => 1, _ => 0 } }"
+  - "fn f(s: Option<&str>) -> u8 { match s { Some(\"a\") => 1, _ => 0 } }"

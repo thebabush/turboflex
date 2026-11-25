@@ -1,0 +1,71 @@
+// turboflex's own architecture: the target shape.
+//
+// Pipeline: driver (extract) -> graph (facts) -> model (mapping) -> engine (reflexion) -> report.
+// service drives the pipeline; cli is a thin front end over service. There is no MCP front end
+// (docs/decisions.md).
+
+component "graph" {
+    doc "Fact schema shared by extractors and the analysis core: entities, edges, kinds, provenance"
+    modules "turboflex_graph" "turboflex_graph::**"
+}
+
+component "driver" {
+    doc "rustc driver extracting item-level dependency facts (own workspace, pinned nightly)"
+    modules "turboflex_driver" "turboflex_driver::**"
+}
+
+component "model" {
+    doc "Architecture model language and the mapping of entities to components"
+    modules "turboflex_model" "turboflex_model::**"
+}
+
+component "engine" {
+    doc "Reflexion engine: convergences, divergences, absences"
+    modules "turboflex_engine" "turboflex_engine::**"
+}
+
+component "report" {
+    doc "Renders engine results for humans and machines"
+    modules "turboflex_report" "turboflex_report::**"
+}
+
+component "service" {
+    doc "Runs the pipeline: invokes the driver, loads facts and models, runs the engine"
+    modules "turboflex_service" "turboflex_service::**"
+}
+
+component "cli" {
+    doc "Command-line front end"
+    modules "turboflex" "turboflex::**"
+}
+
+external "rustc" {
+    doc "The compiler's own crates, reachable only from the driver"
+    crates "rustc_*"
+}
+
+external "io" {
+    doc "Filesystem, processes, network and environment"
+    modules "std::fs" "std::fs::**"
+    modules "std::process" "std::process::**"
+    modules "std::net" "std::net::**"
+    modules "std::env" "std::env::**"
+}
+
+// graph depends on nothing.
+allow "driver" -> "graph" "rustc" "io"
+allow "model" -> "graph"
+allow "engine" -> "graph" "model"
+// report renders a plain-data summary of its own (serializable; the engine's types are not),
+// which service fills from the engine: report does not depend on the engine at all.
+allow "report" -> "graph"
+allow "service" -> "graph" "model" "engine" "report" "io"
+// io: a binary owns its exit status (std::process::ExitCode). Narrowing this to ExitCode needs
+// item patterns that also claim a type's associated items (`ExitCode::SUCCESS`, its `From`
+// impl); today an item pattern claims only the item itself.
+allow "cli" -> "service" "io"
+
+// The driver runs as a subprocess (cargo's RUSTC_WORKSPACE_WRAPPER), never linked: today the cli
+// starts it, in the target shape the service does.
+link "cli" -> "driver" via="process"
+link "service" -> "driver" via="process"

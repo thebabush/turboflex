@@ -1,0 +1,59 @@
+id: prefer-assert-eq
+snapshots:
+  assert!(a == b);:
+    fixed: assert_eq!(a, b);
+    labels:
+    - source: assert!(a == b)
+      style: primary
+      start: 0
+      end: 15
+    - source: assert
+      style: secondary
+      start: 0
+      end: 6
+    - source: ==
+      style: secondary
+      start: 10
+      end: 12
+    - source: (a == b)
+      style: secondary
+      start: 7
+      end: 15
+  assert!(foo(1, 2) == bar);:
+    fixed: assert_eq!(foo(1, 2), bar);
+    labels:
+    - source: assert!(foo(1, 2) == bar)
+      style: primary
+      start: 0
+      end: 25
+    - source: assert
+      style: secondary
+      start: 0
+      end: 6
+    - source: ==
+      style: secondary
+      start: 18
+      end: 20
+    - source: (foo(1, 2) == bar)
+      style: secondary
+      start: 7
+      end: 25
+  assert!(x.len() == 3);:
+    fixed: assert_eq!(x.len(), 3);
+    labels:
+    - source: assert!(x.len() == 3)
+      style: primary
+      start: 0
+      end: 21
+    - source: assert
+      style: secondary
+      start: 0
+      end: 6
+    - source: ==
+      style: secondary
+      start: 16
+      end: 18
+    - source: (x.len() == 3)
+      style: secondary
+      start: 7
+      end: 21

@@ -1,0 +1,20 @@
+[package]
+license.workspace = true
+name = "turboflex-service"
+description = "Runs the pipeline: loads facts and models, computes each view's reflexion, summarizes it."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+thiserror = "2"
+turboflex-engine = { path = "../engine" }
+turboflex-graph = { path = "../graph" }
+turboflex-model = { path = "../model" }
+turboflex-report = { path = "../report" }
+
+[dev-dependencies]
+tempfile = "3"
+
+[lints]
+workspace = true

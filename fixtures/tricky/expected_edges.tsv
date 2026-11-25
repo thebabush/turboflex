@@ -1,0 +1,175 @@
+case	src_item	src_module	dst_item	dst_module	kind	provenance	notes
+c01	app::cases::c01_direct_call::cross_module	app::cases::c01_direct_call	app::util::helper	app::util	calls	source	
+c01	app::cases::c01_direct_call::cross_crate	app::cases::c01_direct_call	core_api::core_helper	core_api	calls	source	cross-crate
+c02	app::cases::c02_method_autoderef::concrete	app::cases::c02_method_autoderef	app::shapes::Circle::new	app::shapes	calls	source	
+c02	app::cases::c02_method_autoderef::concrete	app::cases::c02_method_autoderef	app::shapes::Circle::area	app::shapes	calls	source	
+c02	app::cases::c02_method_autoderef::concrete	app::cases::c02_method_autoderef	app::shapes::Circle	app::shapes	uses_type_body	source	path qualifier + temporary of type Circle
+c02	app::cases::c02_method_autoderef::via_box	app::cases::c02_method_autoderef	app::shapes::Circle	app::shapes	generic_arg	source	Box<Circle> in signature
+c02	app::cases::c02_method_autoderef::via_box	app::cases::c02_method_autoderef	app::shapes::Circle::area	app::shapes	calls	source	receiver autoderef through Box (std Deref, no workspace deref edge)
+c02	app::cases::c02_method_autoderef::via_arc	app::cases::c02_method_autoderef	app::shapes::Circle	app::shapes	generic_arg	source	Arc<Circle> in signature
+c02	app::cases::c02_method_autoderef::via_arc	app::cases::c02_method_autoderef	app::shapes::Circle::area	app::shapes	calls	source	receiver autoderef through Arc (std Deref)
+c02	app::cases::c02_method_autoderef::via_custom_deref	app::cases::c02_method_autoderef	app::wrappers::MyBox	app::wrappers	uses_type_sig	source	
+c02	app::cases::c02_method_autoderef::via_custom_deref	app::cases::c02_method_autoderef	app::shapes::Circle	app::shapes	generic_arg	source	MyBox<Circle>
+c02	app::cases::c02_method_autoderef::via_custom_deref	app::cases::c02_method_autoderef	app::shapes::Circle::area	app::shapes	calls	source	
+c02	app::cases::c02_method_autoderef::via_custom_deref	app::cases::c02_method_autoderef	<app::wrappers::MyBox<T> as core::ops::Deref>::deref	app::wrappers	implicit_deref	desugared	autoderef of method receiver inserts a call to the user Deref impl
+c02	app::cases::c02_method_autoderef::deref_coercion	app::cases::c02_method_autoderef	app::wrappers::MyBox	app::wrappers	uses_type_sig	source	
+c02	app::cases::c02_method_autoderef::deref_coercion	app::cases::c02_method_autoderef	app::shapes::Circle	app::shapes	generic_arg	source	&MyBox<Circle>
+c02	app::cases::c02_method_autoderef::deref_coercion	app::cases::c02_method_autoderef	app::shapes::measure	app::shapes	calls	source	
+c02	app::cases::c02_method_autoderef::deref_coercion	app::cases::c02_method_autoderef	<app::wrappers::MyBox<T> as core::ops::Deref>::deref	app::wrappers	implicit_deref	desugared	deref coercion &MyBox<Circle> -> &Circle at the argument
+c03	app::cases::c03_trait_dispatch::generic_bound	app::cases::c03_trait_dispatch	core_api::Greeter	core_api	bound	source	
+c03	app::cases::c03_trait_dispatch::generic_bound	app::cases::c03_trait_dispatch	core_api::Greeter::greet	core_api	calls	source	unresolved trait method (T generic)
+c03	app::cases::c03_trait_dispatch::dyn_dispatch	app::cases::c03_trait_dispatch	core_api::Greeter	core_api	uses_type_sig	source	&dyn Greeter
+c03	app::cases::c03_trait_dispatch::dyn_dispatch	app::cases::c03_trait_dispatch	core_api::Greeter::greet	core_api	calls	source	virtual call
+c03	app::cases::c03_trait_dispatch::concrete_receiver	app::cases::c03_trait_dispatch	app::animals::Dog	app::animals	uses_type_body	source	unit-struct value
+c03	app::cases::c03_trait_dispatch::concrete_receiver	app::cases::c03_trait_dispatch	<app::animals::Dog as core_api::Greeter>::greet	app::animals	calls	source	[alt:c03-concrete] statically resolved impl method (what rustc/Charon resolve to)
+c03	app::cases::c03_trait_dispatch::concrete_receiver	app::cases::c03_trait_dispatch	core_api::Greeter::greet	core_api	calls	source	[alt:c03-concrete] trait method declaration (what a name resolver may report)
+c03	app::cases::c03_trait_dispatch::assoc_type_where	app::cases::c03_trait_dispatch	core_api::Storage	core_api	bound	source	where S: Storage<Item = Dog>
+c03	app::cases::c03_trait_dispatch::assoc_type_where	app::cases::c03_trait_dispatch	app::animals::Dog	app::animals	generic_arg	source	associated-type binding Item = Dog in the where-clause; also a unit-struct value in the body
+c03	app::cases::c03_trait_dispatch::assoc_type_where	app::cases::c03_trait_dispatch	core_api::Storage::put	core_api	calls	source	
+c03	app::cases::c03_trait_dispatch::impl_arg	app::cases::c03_trait_dispatch	core_api::Greeter	core_api	bound	source	impl Trait in arg position = anonymous generic param
+c03	app::cases::c03_trait_dispatch::impl_arg	app::cases::c03_trait_dispatch	core_api::Greeter::greet	core_api	calls	source	
+c03	app::cases::c03_trait_dispatch::impl_return	app::cases::c03_trait_dispatch	core_api::Greeter	core_api	bound	source	impl Trait in return position (opaque type bound)
+c03	app::cases::c03_trait_dispatch::impl_return	app::cases::c03_trait_dispatch	app::animals::Dog	app::animals	uses_type_body	source	hidden type of the opaque return
+c03	impl core_api::Greeter for app::animals::Dog	app::animals	core_api::Greeter	core_api	impl_of_trait	source	cross-crate trait impl next to the type
+c04	app::cases::c04_impl_location::run	app::cases::c04_impl_location	app::model_a::Widget	app::model_a	uses_type_body	source	struct literal
+c04	app::cases::c04_impl_location::run	app::cases::c04_impl_location	<app::model_a::Widget as app::traits_b::Describe>::describe	app::impls_c	calls	source	[alt:c04-describe] resolved impl method; lives in impls_c, not model_a or traits_b
+c04	app::cases::c04_impl_location::run	app::cases::c04_impl_location	app::traits_b::Describe::describe	app::traits_b	calls	source	[alt:c04-describe] trait method declaration
+c04	app::cases::c04_impl_location::run	app::cases::c04_impl_location	<app::model_a::Widget as core_api::Greeter>::greet	app::impls_c	calls	source	[alt:c04-greet] resolved impl method in impls_c
+c04	app::cases::c04_impl_location::run	app::cases::c04_impl_location	core_api::Greeter::greet	core_api	calls	source	[alt:c04-greet] trait method declaration
+c04	impl app::traits_b::Describe for app::model_a::Widget	app::impls_c	app::traits_b::Describe	app::traits_b	impl_of_trait	source	the impl's module is impls_c (where it is written); an extractor that files it under model_a or traits_b is wrong for this fixture
+c04	impl app::traits_b::Describe for app::model_a::Widget	app::impls_c	app::model_a::Widget	app::model_a	impl_for_type	source	
+c04	impl core_api::Greeter for app::model_a::Widget	app::impls_c	core_api::Greeter	core_api	impl_of_trait	source	
+c04	impl core_api::Greeter for app::model_a::Widget	app::impls_c	app::model_a::Widget	app::model_a	impl_for_type	source	
+c05	app::cases::c05_macros::local_macro	app::cases::c05_macros	app::macros_m::record_via_n	app::macros_m	macro_use	source	P->M: the invocation; invisible after expansion (MIR/Charon cannot see it)
+c05	app::cases::c05_macros::local_macro	app::cases::c05_macros	app::sink_n::record	app::sink_n	calls	macro_expanded	P->N: the call exists only in the expansion; both this and the P->M edge are real
+c05	app::macros_m::record_via_n	app::macros_m	app::sink_n::record	app::sink_n	calls	source	[optional] M->N: textual path in the macro body; unresolvable before expansion; not an item-level dep in rustc
+c05	app::cases::c05_macros::exported_macro	app::cases::c05_macros	macro_kit::exported_double	macro_kit	macro_use	source	cross-crate #[macro_export] macro (lives at crate root)
+c05	app::cases::c05_macros::exported_macro	app::cases::c05_macros	macro_kit::double_it	macro_kit	calls	macro_expanded	via $crate::double_it in the expansion
+c06	app::cases::c06_derive::Record	app::cases::c06_derive	app::kinds::Kind	app::kinds	uses_type_field	source	
+c06	app::cases::c06_derive::Record	app::cases::c06_derive	app::tags::Tag	app::tags	uses_type_field	source	
+c06	<app::cases::c06_derive::Record as core::fmt::Debug>::fmt	app::cases::c06_derive	<app::kinds::Kind as core::fmt::Debug>::fmt	app::kinds	implicit_fmt	derive	field passed as &dyn Debug to debug_struct_field2_finish: MIR shows an unsizing coercion (vtable), not a direct call; target is itself derived
+c06	<app::cases::c06_derive::Record as core::fmt::Debug>::fmt	app::cases::c06_derive	<app::tags::Tag as core::fmt::Debug>::fmt	app::tags	implicit_fmt	derive	as above; target is hand-written in tags
+c06	<app::cases::c06_derive::Record as core::clone::Clone>::clone	app::cases::c06_derive	<app::kinds::Kind as core::clone::Clone>::clone	app::kinds	calls	derive	Clone::clone(&self.kind)
+c06	<app::cases::c06_derive::Record as core::clone::Clone>::clone	app::cases::c06_derive	<app::tags::Tag as core::clone::Clone>::clone	app::tags	calls	derive	hand-written target
+c06	<app::cases::c06_derive::Record as core::cmp::PartialEq>::eq	app::cases::c06_derive	<app::kinds::Kind as core::cmp::PartialEq>::eq	app::kinds	implicit_op	derive	self.kind == other.kind
+c06	<app::cases::c06_derive::Record as core::cmp::PartialEq>::eq	app::cases::c06_derive	<app::tags::Tag as core::cmp::PartialEq>::eq	app::tags	implicit_op	derive	hand-written target
+c06	<app::cases::c06_derive::Record as serde::Serialize>::serialize	app::cases::c06_derive	app::kinds::Kind	app::kinds	generic_arg	derive	[alt:c06-ser-kind] serialize_field(&self.kind): Kind is only an inferred generic arg; the Serialize impl is reached inside serde
+c06	<app::cases::c06_derive::Record as serde::Serialize>::serialize	app::cases::c06_derive	<app::kinds::Kind as serde::Serialize>::serialize	app::kinds	calls	derive	[alt:c06-ser-kind] monomorphization-level resolution of the above
+c06	<app::cases::c06_derive::Record as serde::Serialize>::serialize	app::cases::c06_derive	app::tags::Tag	app::tags	generic_arg	derive	[alt:c06-ser-tag] as for Kind
+c06	<app::cases::c06_derive::Record as serde::Serialize>::serialize	app::cases::c06_derive	<app::tags::Tag as serde::Serialize>::serialize	app::tags	calls	derive	[alt:c06-ser-tag]
+c06	<app::cases::c06_derive::Record as serde::Deserialize>::deserialize	app::cases::c06_derive	app::kinds::Kind	app::kinds	generic_arg	derive	[alt:c06-de-kind] next_element::<Kind>/next_value::<Kind> inside the local __Visitor impl (visit_seq/visit_map), folded into deserialize
+c06	<app::cases::c06_derive::Record as serde::Deserialize>::deserialize	app::cases::c06_derive	<app::kinds::Kind as serde::Deserialize>::deserialize	app::kinds	calls	derive	[alt:c06-de-kind] monomorphization-level resolution
+c06	<app::cases::c06_derive::Record as serde::Deserialize>::deserialize	app::cases::c06_derive	app::tags::Tag	app::tags	generic_arg	derive	[alt:c06-de-tag] as for Kind
+c06	<app::cases::c06_derive::Record as serde::Deserialize>::deserialize	app::cases::c06_derive	<app::tags::Tag as serde::Deserialize>::deserialize	app::tags	calls	derive	[alt:c06-de-tag]
+c07	app::cases::c07_try_from::run	app::cases::c07_try_from	app::errors_b::ErrB	app::errors_b	generic_arg	source	Result<u32, ErrB>
+c07	app::cases::c07_try_from::run	app::cases::c07_try_from	app::errors_a::fallible	app::errors_a	calls	source	
+c07	app::cases::c07_try_from::run	app::cases::c07_try_from	<app::errors_b::ErrB as core::convert::From<app::errors_a::ErrA>>::from	app::error_conv	implicit_from	desugared	`?` -> FromResidual::from_residual (std) -> From::from; MIR of run itself calls std from_residual with ErrB/ErrA generics, the user `from` is reached one level down
+c07	app::cases::c07_try_from::run	app::cases::c07_try_from	app::errors_a::ErrA	app::errors_a	uses_type_body	desugared	[optional] residual Result<Infallible, ErrA> local created by `?`
+c07	impl core::convert::From<app::errors_a::ErrA> for app::errors_b::ErrB	app::error_conv	app::errors_b::ErrB	app::errors_b	impl_for_type	source	impl in a third module
+c07	impl core::convert::From<app::errors_a::ErrA> for app::errors_b::ErrB	app::error_conv	app::errors_a::ErrA	app::errors_a	generic_arg	source	trait generic arg in impl header
+c08	app::cases::c08_iter_ops::sum_bag	app::cases::c08_iter_ops	app::collection::Bag	app::collection	uses_type_sig	source	
+c08	app::cases::c08_iter_ops::sum_bag	app::cases::c08_iter_ops	<app::collection::Bag as core::iter::IntoIterator>::into_iter	app::iteration	implicit_iter	desugared	for-loop desugaring
+c08	app::cases::c08_iter_ops::sum_bag	app::cases::c08_iter_ops	<app::iteration::BagIter as core::iter::Iterator>::next	app::iteration	implicit_iter	desugared	for-loop desugaring
+c08	app::cases::c08_iter_ops::sum_bag	app::cases::c08_iter_ops	app::iteration::BagIter	app::iteration	uses_type_body	desugared	hidden iterator local; never named in source
+c08	app::cases::c08_iter_ops::add	app::cases::c08_iter_ops	app::vector::Vec2	app::vector	uses_type_sig	source	
+c08	app::cases::c08_iter_ops::add	app::cases::c08_iter_ops	<app::vector::Vec2 as core::ops::Add>::add	app::vector_ops	implicit_op	desugared	a + b
+c08	app::cases::c08_iter_ops::first	app::cases::c08_iter_ops	app::vector::Vec2	app::vector	uses_type_sig	source	
+c08	app::cases::c08_iter_ops::first	app::cases::c08_iter_ops	<app::vector::Vec2 as core::ops::Index<usize>>::index	app::vector_ops	implicit_op	desugared	v[0]
+c08	impl core::iter::IntoIterator for app::collection::Bag	app::iteration	app::collection::Bag	app::collection	impl_for_type	source	
+c08	impl core::ops::Add for app::vector::Vec2	app::vector_ops	app::vector::Vec2	app::vector	impl_for_type	source	
+c08	impl core::ops::Index<usize> for app::vector::Vec2	app::vector_ops	app::vector::Vec2	app::vector	impl_for_type	source	
+c09	app::cases::c09_drop::run	app::cases::c09_drop	app::resources::Guard::new	app::resources	calls	source	
+c09	app::cases::c09_drop::run	app::cases::c09_drop	app::resources::Guard	app::resources	uses_type_body	source	local g + field read
+c09	app::cases::c09_drop::run	app::cases::c09_drop	<app::resources::Guard as core::ops::Drop>::drop	app::resources	implicit_drop	desugared	scope-end drop; MIR has a Drop terminator (drop glue), not a call to drop
+c10	app::cases::c10_fmt::render	app::cases::c10_fmt	app::money::Money	app::money	uses_type_sig	source	
+c10	app::cases::c10_fmt::render	app::cases::c10_fmt	<app::money::Money as core::fmt::Display>::fmt	app::money_fmt	implicit_fmt	macro_expanded	format_args! takes <Money as Display>::fmt as a fn pointer (Argument::new_display), not a call
+c10	app::cases::c10_fmt::print	app::cases::c10_fmt	app::money::Money	app::money	uses_type_sig	source	
+c10	app::cases::c10_fmt::print	app::cases::c10_fmt	<app::money::Money as core::fmt::Display>::fmt	app::money_fmt	implicit_fmt	macro_expanded	println!
+c10	impl core::fmt::Display for app::money::Money	app::money_fmt	app::money::Money	app::money	impl_for_type	source	
+c11	app::cases::c11_type_only::Holder	app::cases::c11_type_only	app::aliases::Id	app::aliases	uses_type_field	source	[alt:c11-alias] the alias as written (name-resolution view)
+c11	app::cases::c11_type_only::Holder	app::cases::c11_type_only	app::types_t::Inner	app::types_t	uses_type_field	source	[alt:c11-alias] the aliased type (rustc/Charon normalize aliases away)
+c11	app::cases::c11_type_only::Holder	app::cases::c11_type_only	app::types_t::Elem	app::types_t	generic_arg	source	Vec<Elem>
+c11	app::aliases::Id	app::aliases	app::types_t::Inner	app::types_t	uses_type_sig	source	alias RHS (no dedicated kind); MIR-based tools see no alias at use sites (normalized away)
+c11	app::cases::c11_type_only::sig_only	app::cases::c11_type_only	app::types_t::Inner	app::types_t	uses_type_sig	source	
+c11	app::cases::c11_type_only::sig_only	app::cases::c11_type_only	app::types_t::Elem	app::types_t	uses_type_sig	source	
+c11	app::cases::c11_type_only::body_only	app::cases::c11_type_only	app::types_t::Elem	app::types_t	generic_arg	source	let v: Vec<Elem> — body only
+c11	app::cases::c11_type_only::assoc_const	app::cases::c11_type_only	app::types_t::Limits::MAX	app::types_t	reads_global	source	associated const; may be inlined as a literal in MIR
+c11	app::cases::c11_type_only::assoc_const	app::cases::c11_type_only	app::types_t::Limits	app::types_t	uses_type_body	source	[optional] path qualifier only
+c12	app::cases::c12_reexport::run	app::cases::c12_reexport	app::reexp_a::Foo	app::reexp_a	uses_type_sig	source	canonical definition; written as reexp_b::Foo
+c12	app::cases::c12_reexport::run	app::cases::c12_reexport	app::reexp_a::Foo::make	app::reexp_a	calls	source	canonical definition; written as reexp_b::Foo::make
+c12	app::cases::c12_reexport::run	app::cases::c12_reexport	app::reexp_b::Foo	app::reexp_b	uses_type_sig	source	[optional] facade path as written; a module-level architecture check may legitimately want P->reexp_b rather than P->reexp_a
+c12	app::reexp_b::Foo	app::reexp_b	app::reexp_a::Foo	app::reexp_a	uses_type_body	source	[optional] the `pub use` re-export item itself (no dedicated kind)
+c13	app::cases::c13_globals::read	app::cases::c13_globals	app::config::LIMIT	app::config	reads_global	source	const: usually inlined as a value in MIR
+c13	app::cases::c13_globals::read	app::cases::c13_globals	app::config::GREETING	app::config	reads_global	source	static
+c13	app::cases::c13_globals::bump	app::cases::c13_globals	app::config::COUNTER	app::config	writes_global	source	interior mutability: MIR only shows a shared borrow of the static passed to AtomicU32::fetch_add; "write" is semantic
+c14	app::cases::c14_closures_fnptr::with_closure	app::cases::c14_closures_fnptr	app::callbacks::notify	app::callbacks	calls	source	call is in the closure body (rustc def-path with_closure::{closure#0}); folded into the enclosing fn
+c14	app::cases::c14_closures_fnptr::with_fn_pointer	app::cases::c14_closures_fnptr	app::math::triple	app::math	calls	source	fn item reified to a fn pointer, NOT called here; listed as `calls` because it is the only static evidence of the eventual call
+c14	app::cases::c14_closures_fnptr::with_fn_pointer	app::cases::c14_closures_fnptr	app::callbacks::apply	app::callbacks	calls	source	
+c15	app::cases::c15_async::await_fn	app::cases::c15_async	app::infra::net::fetch	app::infra::net	calls	source	body lowered to a coroutine (await_fn::{closure}); folded into the fn
+c15	app::cases::c15_async::async_block	app::cases::c15_async	app::infra::net::fetch	app::infra::net	calls	source	inside an async block (separate coroutine body); folded into the fn
+c15	app::cases::c15_async::via_bound	app::cases::c15_async	app::service::Service	app::service	bound	source	
+c15	app::cases::c15_async::via_bound	app::cases::c15_async	app::service::Service::handle	app::service	calls	source	native async fn in trait (desugars to an RPITIT)
+c15	app::cases::c15_async::via_concrete	app::cases::c15_async	app::service_impl::Echo	app::service_impl	uses_type_body	source	unit-struct value
+c15	app::cases::c15_async::via_concrete	app::cases::c15_async	<app::service_impl::Echo as app::service::Service>::handle	app::service_impl	calls	source	[alt:c15-concrete] resolved impl method
+c15	app::cases::c15_async::via_concrete	app::cases::c15_async	app::service::Service::handle	app::service	calls	source	[alt:c15-concrete] trait method declaration
+c15	impl app::service::Service for app::service_impl::Echo	app::service_impl	app::service::Service	app::service	impl_of_trait	source	
+c15	<app::service_impl::Echo as app::service::Service>::handle	app::service_impl	app::infra::net::fetch	app::infra::net	calls	source	await inside an async trait-impl method
+c16	app::cases::c16_cfg::extra_entry	app::cases::c16_cfg	app::extras::bonus	app::extras	calls	source	[cfg:feature=extra] only exists with --features extra / --all-features
+c16	app::cases::c16_cfg::tests::validates	app::cases::c16_cfg::tests	app::checks::validate	app::checks	calls	source	[cfg:test] only exists in the test build
+c17	app::cases::c17_build_rs::run	app::cases::c17_build_rs	app::cases::c17_build_rs::generated::generated_entry	app::cases::c17_build_rs::generated	calls	source	callee is defined only in $OUT_DIR/generated.rs
+c17	app::cases::c17_build_rs::generated::generated_entry	app::cases::c17_build_rs::generated	app::gen_target::target_fn	app::gen_target	calls	macro_expanded	code comes from build.rs output via include!(concat!(env!("OUT_DIR"), ...)); needs build scripts to have run
+c18	<app::cases::c18_serde_with::Payload as serde::Serialize>::serialize	app::cases::c18_serde_with	app::serde_helpers::ser_upper	app::serde_helpers	calls	derive	serialize_with = "..." (path in a string); call sits in a local `impl Serialize for __SerializeWith`, folded into serialize
+c18	<app::cases::c18_serde_with::Payload as serde::Serialize>::serialize	app::cases::c18_serde_with	app::serde_helpers::hex_u32::serialize	app::serde_helpers::hex_u32	calls	derive	with = "..." ; same local-impl nesting
+c18	<app::cases::c18_serde_with::Payload as serde::Deserialize>::deserialize	app::cases::c18_serde_with	app::serde_helpers::hex_u32::deserialize	app::serde_helpers::hex_u32	calls	derive	called from local `impl Deserialize for __DeserializeWith` used by both visit_seq and visit_map; folded into deserialize
+c19	app::cases::c19_sqlx::UserRow	app::cases::c19_sqlx	app::infra::db_types::UserId	app::infra::db_types	uses_type_field	source	
+c19	app::cases::c19_sqlx::UserRow	app::cases::c19_sqlx	app::infra::db_types::Email	app::infra::db_types	uses_type_field	source	
+c19	<app::cases::c19_sqlx::UserRow as sqlx::FromRow<R>>::from_row	app::cases::c19_sqlx	app::infra::db_types::UserId	app::infra::db_types	generic_arg	derive	__row.try_get::<UserId, _>("id"), inferred; also in the derive's where-clause (UserId: Decode + Type)
+c19	<app::cases::c19_sqlx::UserRow as sqlx::FromRow<R>>::from_row	app::cases::c19_sqlx	app::infra::db_types::Email	app::infra::db_types	uses_type_body	derive	local `email: Email`
+c19	<app::cases::c19_sqlx::UserRow as sqlx::FromRow<R>>::from_row	app::cases::c19_sqlx	<app::infra::db_types::Email as core::convert::TryFrom<String>>::try_from	app::infra::db_types	calls	derive	from #[sqlx(try_from = "String")]; call is inside an and_then closure, folded into from_row
+c19	<app::cases::c19_sqlx::UserRow as sqlx::FromRow<R>>::from_row	app::cases::c19_sqlx	<app::infra::db_types::UserId as sqlx::Decode<sqlx::Sqlite>>::decode	app::infra::db_codec	calls	derive	[optional] impl is generic over R: Row, so the db_codec impl is only selected after monomorphization (R = SqliteRow, via c19::load)
+c19	<app::cases::c19_sqlx::UserRow as sqlx::FromRow<R>>::from_row	app::cases::c19_sqlx	<app::infra::db_types::UserId as sqlx::Type<sqlx::Sqlite>>::type_info	app::infra::db_codec	calls	derive	[optional] as above (type check in try_get)
+c19	app::cases::c19_sqlx::load	app::cases::c19_sqlx	<app::infra::db_types::UserId as sqlx::Decode<sqlx::Sqlite>>::decode	app::infra::db_codec	calls	desugared	[optional] mono-only: query_as::<_, UserRow> -> FromRow -> try_get -> Decode, all inside sqlx; load's only direct workspace dep (UserRow) is same-module
+c19	impl sqlx::Type<sqlx::Sqlite> for app::infra::db_types::UserId	app::infra::db_codec	app::infra::db_types::UserId	app::infra::db_types	impl_for_type	source	
+c19	impl sqlx::Decode<'r, sqlx::Sqlite> for app::infra::db_types::UserId	app::infra::db_codec	app::infra::db_types::UserId	app::infra::db_types	impl_for_type	source	
+c20	app::cases::c20_blanket_impl::run	app::cases::c20_blanket_impl	app::animals::Dog	app::animals	uses_type_body	source	
+c20	app::cases::c20_blanket_impl::run	app::cases::c20_blanket_impl	<T as app::blanket::Shout>::shout	app::blanket	calls	source	[alt:c20-shout] blanket impl method impl<T: Greeter> Shout for T
+c20	app::cases::c20_blanket_impl::run	app::cases::c20_blanket_impl	app::blanket::Shout::shout	app::blanket	calls	source	[alt:c20-shout] trait method declaration
+c20	app::cases::c20_blanket_impl::run	app::cases::c20_blanket_impl	<app::animals::Dog as core_api::Greeter>::greet	app::animals	calls	desugared	[optional] mono-only: reached through the blanket impl's self.greet() with T = Dog
+c20	impl<T: core_api::Greeter> app::blanket::Shout for T	app::blanket	core_api::Greeter	core_api	bound	source	
+c20	<T as app::blanket::Shout>::shout	app::blanket	core_api::Greeter::greet	core_api	calls	source	
+c21	app::cases::c21_default_method::run	app::cases::c21_default_method	app::report_impl::Doc	app::report_impl	uses_type_body	source	
+c21	app::cases::c21_default_method::run	app::cases::c21_default_method	app::defaults::Report::render	app::defaults	calls	source	[alt:c21-default] resolves to the trait's provided (default) body; there is no render in report_impl
+c21	app::cases::c21_default_method::run	app::cases::c21_default_method	<app::report_impl::Doc as app::defaults::Report>::render	app::report_impl	calls	source	[alt:c21-default] provided method materialized per impl (named under the impl, body from defaults)
+c21	app::defaults::Report::render	app::defaults	app::render::frame	app::render	calls	source	edge from a default method body (owned by the trait)
+c21	impl app::defaults::Report for app::report_impl::Doc	app::report_impl	app::defaults::Report	app::defaults	impl_of_trait	source	
+c22	app::cases::c22_split_impl::run	app::cases::c22_split_impl	app::split::Thing::new	app::split	calls	source	
+c22	app::cases::c22_split_impl::run	app::cases::c22_split_impl	app::split::Thing::extra	app::split_ext	calls	source	method path is under the type (split::Thing) but the impl block is in split_ext; dst_module is where it is written. rustc def-path puts it under the split_ext impl block (split_ext::{impl#0}::extra); name resolvers put it under the type
+c22	app::cases::c22_split_impl::run	app::cases::c22_split_impl	app::split::Thing	app::split	uses_type_body	source	
+c22	impl app::split::Thing	app::split_ext	app::split::Thing	app::split	impl_for_type	source	second inherent impl block in a different module
+c23	app::cases::c23_generic_inst::run	app::cases::c23_generic_inst	app::containers::Stack	app::containers	uses_type_sig	source	
+c23	app::cases::c23_generic_inst::run	app::cases::c23_generic_inst	app::shapes::Circle	app::shapes	generic_arg	source	Stack<Circle>
+c23	app::cases::c23_generic_inst::run	app::cases::c23_generic_inst	app::containers::Stack::new	app::containers	calls	source	
+c23	app::cases::c23_generic_inst::run	app::cases::c23_generic_inst	app::containers::Stack::push	app::containers	calls	source	
+c23	app::cases::c23_generic_inst::run	app::cases::c23_generic_inst	app::shapes::Circle::new	app::shapes	calls	source	
+c24	app::cases::c24_ufcs::qualified	app::cases::c24_ufcs	app::animals::Dog	app::animals	uses_type_body	source	
+c24	app::cases::c24_ufcs::qualified	app::cases::c24_ufcs	<app::animals::Dog as core_api::Greeter>::greet	app::animals	calls	source	[alt:c24-qualified] <Dog as Greeter>::greet resolved
+c24	app::cases::c24_ufcs::qualified	app::cases::c24_ufcs	core_api::Greeter::greet	core_api	calls	source	[alt:c24-qualified] trait method as named
+c24	app::cases::c24_ufcs::trait_path	app::cases::c24_ufcs	app::animals::Dog	app::animals	uses_type_body	source	
+c24	app::cases::c24_ufcs::trait_path	app::cases::c24_ufcs	<app::animals::Dog as core_api::Greeter>::greet	app::animals	calls	source	[alt:c24-trait-path] Greeter::greet(&Dog) resolved
+c24	app::cases::c24_ufcs::trait_path	app::cases::c24_ufcs	core_api::Greeter::greet	core_api	calls	source	[alt:c24-trait-path] trait method as named
+c24	app::cases::c24_ufcs::inherent_path	app::cases::c24_ufcs	app::shapes::Circle	app::shapes	uses_type_sig	source	
+c24	app::cases::c24_ufcs::inherent_path	app::cases::c24_ufcs	app::shapes::Circle::area	app::shapes	calls	source	Circle::area(c) path-call form
+c25	app::cases::c25_constructs::struct_literal	app::cases::c25_constructs	app::payload::Point	app::payload	constructs	source	struct literal
+c25	app::cases::c25_constructs::tuple_struct	app::cases::c25_constructs	app::payload::Meters	app::payload	constructs	source	tuple-struct constructor Meters(3): an aggregate in MIR, not a call
+c25	app::cases::c25_constructs::variants	app::cases::c25_constructs	app::payload::Job	app::payload	constructs	source	unit, tuple and struct-like variants; dst is the enum, variants in the detail
+c25	app::cases::c25_constructs::ctor_as_fn	app::cases::c25_constructs	app::payload::Job	app::payload	constructs	source	.map(Job::Resize): constructor used as a fn value is constructs, not calls
+c25	app::cases::c25_constructs::cross_crate	app::cases::c25_constructs	core_api::Version	core_api	constructs	source	cross-crate struct literal
+c25	app::cases::c25_constructs::cross_crate	app::cases::c25_constructs	core_api::Level	core_api	constructs	source	cross-crate variant Level::High(2); also matches_on via matches! (macro_expanded)
+c26	app::cases::c26_matches::Holder	app::cases::c26_matches	app::payload::Job	app::payload	uses_type_field	source	
+c26	app::cases::c26_matches::match_on	app::cases::c26_matches	app::payload::Job	app::payload	matches_on	source	match
+c26	app::cases::c26_matches::if_let	app::cases::c26_matches	app::payload::Job	app::payload	matches_on	source	if let
+c26	app::cases::c26_matches::let_else	app::cases::c26_matches	app::payload::Job	app::payload	matches_on	source	let else
+c26	app::cases::c26_matches::while_let	app::cases::c26_matches	app::payload::Job	app::payload	matches_on	source	while let Some(Job::Resize(n)); also matches_on Option
+c26	app::cases::c26_matches::macro_match	app::cases::c26_matches	app::payload::Job	app::payload	matches_on	macro_expanded	matches!: the switchInt span is the macro's match expression
+c26	app::cases::c26_matches::field_match	app::cases::c26_matches	app::payload::Job	app::payload	matches_on	source	match h.job: no local of type Job, only the discriminant read names it
+c26	app::cases::c26_matches::cross_crate	app::cases::c26_matches	core_api::Level	core_api	matches_on	source	cross-crate enum

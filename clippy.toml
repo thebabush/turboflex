@@ -1,0 +1,7 @@
+allow-unwrap-in-tests = true
+allow-expect-in-tests = true
+allow-print-in-tests = true
+avoid-breaking-exported-api = false
+# rrr: prefer enums over primitive flags. Two bool params (or three bool fields) is an enum.
+max-fn-params-bools = 1
+max-struct-bools = 2

@@ -1,0 +1,16 @@
+[package]
+name = "app"
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[features]
+default = []
+# Gates the call in `cases::c16_cfg::extra_entry`. Off by default.
+extra = []
+
+[dependencies]
+core_api = { path = "../core_api" }
+macro_kit = { path = "../macro_kit" }
+serde = { version = "1.0.228", features = ["derive"] }
+sqlx = { version = "0.8.6", default-features = false, features = ["sqlite", "macros"] }

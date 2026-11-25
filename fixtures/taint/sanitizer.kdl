@@ -1,0 +1,44 @@
+// taint fixture, sanitizer view: who builds a `SafeCmd`? The process sink takes only a `SafeCmd`,
+// so a value of it must come from the sanitizer. Every other construction is a bypass.
+//
+// Only `constructs` counts (calls to a constructor are not checked: the constructor itself is).
+// `derive` is kept: a derived `Default` or `Deserialize` builds a `SafeCmd` from nothing or from
+// untrusted input, and that is a real bypass.
+//
+// Placement. Same-component edges are not checked, and an item pattern takes only the type, not
+// its impls or methods. So the type is a component of its own (`safe-cmd`), and its module, where
+// the derives and the inherent impl sit, is another one (`safe-cmd-home`) that may NOT construct
+// it: every derive and associated fn there that builds a `SafeCmd` is a divergence, unless the
+// sanitizer claims it by an item pattern (`parse`, the derived `Clone`).
+// Everything in the workspace is mapped (`rest` is the catch-all), because the edges of unmapped
+// entities are not checked.
+
+policy {
+    edges "constructs"
+    provenance "source" "macro_expanded" "desugared" "derive"
+}
+
+component "safe-cmd" {
+    doc "The sanitized type, alone"
+    items "app::safe_cmd::SafeCmd"
+}
+
+component "safe-cmd-home" {
+    doc "The type's module: its derives and the impls written next to it"
+    modules "app::safe_cmd"
+}
+
+component "sanitizer" {
+    doc "The only component that may build a SafeCmd"
+    modules "app::sanitizer"
+    // Vetted constructors that live next to the type: the checked associated constructor, and
+    // the derived Clone (copying a sanitized value keeps it sanitized).
+    items "app::safe_cmd::SafeCmd::parse" "<app::safe_cmd::SafeCmd as core::clone::Clone>::clone"
+}
+
+component "rest" {
+    doc "Everything else in the workspace, sinks included"
+    modules "app" "app::**"
+}
+
+allow "sanitizer" -> "safe-cmd"

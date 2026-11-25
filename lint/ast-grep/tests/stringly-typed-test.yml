@@ -1,0 +1,14 @@
+id: stringly-typed
+valid:
+  - "struct S { name: String }"
+  - "struct S { kind: Kind }"
+  - "struct S { status: Option<Status> }"
+  - "fn f(label: &str) {}"
+  - "fn f(mode: Mode) {}"
+  - "mod tests { fn f(kind: &str) {} }"
+invalid:
+  - "struct S { kind: String }"
+  - "struct S { pub job_status: Option<String> }"
+  - "struct S<'a> { mode: &'a str }"
+  - "fn f(state: &str) {}"
+  - "fn f(r#type: String) {}"

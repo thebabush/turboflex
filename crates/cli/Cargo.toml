@@ -1,0 +1,22 @@
+[package]
+license.workspace = true
+name = "turboflex"
+description = "Command-line front end: checks extracted facts against architecture models."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[[bin]]
+name = "turboflex"
+path = "src/main.rs"
+
+[dependencies]
+clap = { version = "4", features = ["derive"] }
+turboflex-service = { path = "../service" }
+
+[dev-dependencies]
+tempfile = "3"
+turboflex-graph = { path = "../graph" }
+
+[lints]
+workspace = true

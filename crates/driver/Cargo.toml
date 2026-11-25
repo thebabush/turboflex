@@ -1,0 +1,56 @@
+# Its own workspace: links librustc_driver, so it builds only on the nightly pinned in
+# rust-toolchain.toml. The root workspace (stable) excludes this directory.
+[workspace]
+resolver = "3"
+
+# Copy of the root workspace's lint policy (a separate workspace can't inherit it): keep the
+# two [workspace.lints] tables identical.
+[workspace.lints.rust]
+unsafe_code = "forbid"
+rust_2018_idioms = { level = "warn", priority = -1 }
+unused_qualifications = "warn"
+unreachable_pub = "warn"
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+# Pedantic lints we don't want: noisy for an internal tool.
+module_name_repetitions = "allow"
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+# Restriction lints we do want.
+unwrap_used = "warn"
+dbg_macro = "warn"
+todo = "warn"
+unimplemented = "warn"
+print_stdout = "warn"
+print_stderr = "warn"
+exit = "warn"
+allow_attributes = "warn"
+allow_attributes_without_reason = "warn"
+# rrr: exhaustive matches on enums, so new variants are compile errors.
+wildcard_enum_match_arm = "warn"
+
+[package]
+license = "Apache-2.0"
+name = "turboflex-driver"
+description = "rustc driver extracting item-level dependency facts from a Cargo workspace"
+version = "0.1.0"
+edition = "2024"
+publish = false
+
+[[bin]]
+name = "turboflex-driver"
+path = "src/main.rs"
+
+[dependencies]
+tempfile = "3"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "2"
+turboflex-graph = { path = "../graph" }
+
+[package.metadata.rust-analyzer]
+rustc_private = true
+
+[lints]
+workspace = true

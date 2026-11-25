@@ -1,0 +1,5 @@
+[toolchain]
+# Must match the toolchain the driver links against (librustc_driver) and the one cargo uses to
+# build the analysed workspace's dependencies; the front-end forwards it via RUSTUP_TOOLCHAIN.
+channel = "nightly-2026-09-17"
+components = ["rustc-dev", "llvm-tools", "rust-src", "clippy", "rustfmt"]

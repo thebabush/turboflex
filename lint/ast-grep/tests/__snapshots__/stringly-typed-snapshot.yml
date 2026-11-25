@@ -1,0 +1,72 @@
+id: stringly-typed
+snapshots:
+  'fn f(r#type: String) {}':
+    labels:
+    - source: 'r#type: String'
+      style: primary
+      start: 5
+      end: 19
+    - source: r#type
+      style: secondary
+      start: 5
+      end: 11
+    - source: String
+      style: secondary
+      start: 13
+      end: 19
+  'fn f(state: &str) {}':
+    labels:
+    - source: 'state: &str'
+      style: primary
+      start: 5
+      end: 16
+    - source: state
+      style: secondary
+      start: 5
+      end: 10
+    - source: '&str'
+      style: secondary
+      start: 12
+      end: 16
+  'struct S { kind: String }':
+    labels:
+    - source: 'kind: String'
+      style: primary
+      start: 11
+      end: 23
+    - source: kind
+      style: secondary
+      start: 11
+      end: 15
+    - source: String
+      style: secondary
+      start: 17
+      end: 23
+  'struct S { pub job_status: Option<String> }':
+    labels:
+    - source: 'pub job_status: Option<String>'
+      style: primary
+      start: 11
+      end: 41
+    - source: job_status
+      style: secondary
+      start: 15
+      end: 25
+    - source: Option<String>
+      style: secondary
+      start: 27
+      end: 41
+  'struct S<''a> { mode: &''a str }':
+    labels:
+    - source: 'mode: &''a str'
+      style: primary
+      start: 15
+      end: 28
+    - source: mode
+      style: secondary
+      start: 15
+      end: 19
+    - source: '&''a str'
+      style: secondary
+      start: 21
+      end: 28

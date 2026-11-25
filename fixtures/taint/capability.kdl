@@ -1,0 +1,44 @@
+// taint fixture, capability view: who may use which sink. Running a program (`std::process`) is
+// `exec`'s capability, writing files is `storage`'s; the rest of the workspace goes through them.
+//
+// A capability is exercised by running its code, so only `calls` count: naming `ExitStatus` in a
+// signature is not spawning anything. Everything in the workspace is mapped (`rest` is the
+// catch-all), because the edges of unmapped entities are not checked.
+
+policy {
+    edges "calls"
+}
+
+component "exec" {
+    doc "Process sink: runs a SafeCmd"
+    modules "app::exec"
+}
+
+component "storage" {
+    doc "Filesystem-write sink"
+    modules "app::storage"
+}
+
+component "rest" {
+    doc "Everything else in the workspace"
+    modules "app" "app::**"
+}
+
+external "process" {
+    doc "Running programs"
+    modules "std::process" "std::process::**"
+}
+
+external "fs-write" {
+    doc "Writing the filesystem. Reads (`read_to_string`, `File::open`) are in no external: anyone may"
+    items "std::fs::write" "std::fs::File::create" "std::fs::OpenOptions::open"
+    items "std::fs::create_dir" "std::fs::create_dir_all" "std::fs::copy" "std::fs::rename"
+    items "std::fs::remove_file" "std::fs::remove_dir" "std::fs::remove_dir_all"
+    items "std::fs::hard_link" "std::fs::set_permissions"
+}
+
+allow "exec" -> "process"
+allow "storage" -> "fs-write"
+// Plumbing: the rest calls the sinks, the process sink reads the SafeCmd it was given.
+allow "rest" -> "exec" "storage"
+allow "exec" -> "rest"

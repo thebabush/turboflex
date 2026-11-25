@@ -1,0 +1,37 @@
+// Who builds a validated Model or Graph? Model::parse and Graph::merge are the checking
+// constructors; the engine trusts what they check. Each type sits alone in a component, and its
+// own module in another, so constructors and derives written next to the type are checked too.
+
+policy {
+    edges "constructs"
+    provenance "source" "macro_expanded" "desugared" "derive"
+    targets "model-type" "graph-type"
+}
+
+component "model-type" { items "turboflex_model::model::Model"; }
+component "model-home" { modules "turboflex_model::model"; }
+component "model-parser" {
+    modules "turboflex_model::parse"
+    items "<turboflex_model::model::Model as core::clone::Clone>::clone"
+}
+
+component "graph-type" { items "turboflex_graph::graph::Graph"; }
+component "graph-home" { modules "turboflex_graph::graph"; }
+component "graph-merge" {
+    items "turboflex_graph::graph::Graph::merge"
+    items "<turboflex_graph::graph::Graph as core::clone::Clone>::clone"
+    items "<turboflex_graph::graph::Graph as core::default::Default>::default"
+}
+
+component "rest" {
+    modules "turboflex" "turboflex::**"
+    modules "turboflex_graph" "turboflex_graph::**"
+    modules "turboflex_model" "turboflex_model::**"
+    modules "turboflex_engine" "turboflex_engine::**"
+    modules "turboflex_report" "turboflex_report::**"
+    modules "turboflex_service" "turboflex_service::**"
+    modules "turboflex_driver" "turboflex_driver::**"
+}
+
+allow "model-parser" -> "model-type"
+allow "graph-merge" -> "graph-type"

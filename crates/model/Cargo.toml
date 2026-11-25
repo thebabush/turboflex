@@ -1,0 +1,16 @@
+[package]
+license.workspace = true
+name = "turboflex-model"
+description = "Architecture model language (KDL) and the mapping of extracted entities to its components."
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+
+[dependencies]
+kdl = { version = "6.7.1", default-features = false, features = ["span"] }
+miette = { version = "7.6.0", default-features = false }
+thiserror = "2"
+turboflex-graph = { path = "../graph" }
+
+[lints]
+workspace = true
